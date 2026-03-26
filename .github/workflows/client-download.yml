@@ -1,0 +1,27 @@
+name: Build Client with Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Client
+        run: msbuild Client.slnx /p:Configuration=Debug /p:Platform=x64 /m
+
+      - name: Upload Client
+        uses: actions/upload-artifact@v4
+        with:
+          name: openko-client
+          path: |
+            **/Debug-x64/**
